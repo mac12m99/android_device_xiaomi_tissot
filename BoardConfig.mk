@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-DEVICE_PATH := device/xiaomi/tissot
+DEVICE_PATH := device/xiaomi/daisy
 
 TARGET_SPECIFIC_HEADER_PATH := $(DEVICE_PATH)/include
 
@@ -38,14 +38,20 @@ TARGET_BOARD_PLATFORM_GPU := qcom-adreno506
 TARGET_BOARD_SUFFIX := _64
 TARGET_USES_64_BIT_BINDER := true
 
+# Enable CPUSets
+ENABLE_CPUSETS := true
+ENABLE_SCHEDBOOST := true
+
 # Kernel
 BOARD_KERNEL_BASE := 0x80000000
-BOARD_KERNEL_CMDLINE := androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78af000
-BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.console=ttyHSL0 androidboot.hardware=qcom msm_rtb.filter=0x237 ehci-hcd.park=3 lpm_levels.sleep_disabled=1 androidboot.bootdevice=7824900.sdhci earlycon=msm_hsl_uart,0x78af000 buildvariant=user veritykeyid=id:5560e7863b4d8118c2f1b065595cf93bb2447992
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 BOARD_KERNEL_PAGESIZE :=  2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x01000000 --tags_offset 0x00000100
-TARGET_KERNEL_CONFIG := custom_tissot-perf_defconfig
-TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8953
+#TARGET_KERNEL_CONFIG := custom_tissot-perf_defconfig
+#TARGET_KERNEL_SOURCE := kernel/xiaomi/msm8953
+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb
+TARGET_PREBUILT_KERNEL := device/xiaomi/daisy/prebuilt/Image.gz-dtb
 
 # ANT
 BOARD_ANT_WIRELESS_DEVICE := "vfs-prerelease"
@@ -92,6 +98,7 @@ TARGET_BOOTANIMATION_TEXTURE_CACHE := true
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := MSM8953
 TARGET_NO_BOOTLOADER := true
+TARGET_USES_UEFI := true
 
 # Camera
 USE_DEVICE_SPECIFIC_CAMERA := true
@@ -164,9 +171,9 @@ DEVICE_MATRIX_FILE   := $(DEVICE_PATH)/compatibility_matrix.xml
 HWUI_COMPILE_FOR_PERF := true
 
 # Init
-TARGET_INIT_VENDOR_LIB := libinit_tissot
+#TARGET_INIT_VENDOR_LIB := libinit_tissot
 TARGET_PLATFORM_DEVICE_BASE := /devices/soc/
-TARGET_RECOVERY_DEVICE_MODULES := libinit_tissot
+#TARGET_RECOVERY_DEVICE_MODULES := libinit_tissot
 
 # Keymaster
 TARGET_PROVIDES_KEYMASTER := true
@@ -183,12 +190,17 @@ TARGET_USES_MEDIA_EXTENSIONS := true
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 67108864
-BOARD_SYSTEMIMAGE_PARTITION_SIZE := 3221225472
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 55087438848
+BOARD_RECOVERYIMAGE_PARTITION_SIZE := 67108864
+BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2684354560
+BOARD_USERDATAIMAGE_PARTITION_SIZE := 54819536384
 BOARD_PERSISTIMAGE_PARTITION_SIZE := 33554432
 BOARD_PERSISTIMAGE_FILE_SYSTEM_TYPE := ext4
 BOARD_BUILD_SYSTEM_ROOT_IMAGE := true
 BOARD_FLASH_BLOCK_SIZE := 131072 # (BOARD_KERNEL_PAGESIZE * 64)
+
+#BOARD_SYSTEMIMAGE_PARTITION_SIZE := 2113748992 #
+#BOARD_USERDATAIMAGE_PARTITION_SIZE := 53823963136 #
+#BOARD_PERSISTIMAGE_PARTITION_SIZE := 28819456 #
 
 BOARD_HAS_LARGE_FILESYSTEM := true
 BOARD_USES_RECOVERY_AS_BOOT := true
@@ -212,7 +224,7 @@ BOARD_USES_QCOM_HARDWARE := true
 TARGET_USE_SDCLANG := true
 
 # Recovery
-TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/recovery/fstab.qcom
+TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/rootdir/etc/recovery.fstab
 
 # RIL
 TARGET_RIL_VARIANT := caf
@@ -239,4 +251,4 @@ WIFI_DRIVER_FW_PATH_P2P := "p2p"
 WIFI_HIDL_FEATURE_AWARE := true
 
 # Inherit from the proprietary version
--include vendor/xiaomi/tissot/BoardConfigVendor.mk
+#-include vendor/xiaomi/daisy/BoardConfigVendor.mk
